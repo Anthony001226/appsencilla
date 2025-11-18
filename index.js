@@ -48,16 +48,16 @@ app.get('/api/mensaje', (req, res) => {
 });
 
 
-// 3. Servir archivos estáticos de Angular (Frontend)
-const angularPath = path.join(__dirname, 'frontend', 'dist', 'frontend', 'browser');
-    
+
 // Verifica que la carpeta exista antes de servirla
 // if (fs.existsSync(angularPath)) { // Puedes descomentar esto para debug local
-app.use(express.static(angularPath));
-// }
+const angularPath = path.join(__dirname, 'frontend', 'dist', 'frontend', 'browser'); 
+app.use(express.static(angularPath)); // Esto sirve la carpeta estática
 
-// 4. Redirigir cualquier otra ruta al index.html de Angular (para manejo de rutas en Angular)
-app.get('*', (req, res) => {
+app.use((req, res, next) => {
+    // Para manejar rutas de Angular (como /about, /users, etc.)
+    // Si la ruta no fue manejada por la API o los archivos estáticos anteriores, 
+    // se envía siempre el index.html de Angular.
     res.sendFile(path.join(angularPath, 'index.html'));
 });
 
